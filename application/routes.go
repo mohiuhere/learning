@@ -7,6 +7,18 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+
+func loadRouter() *chi.Mux {
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+
+	//Root routes for sub-route
+	router.Route("/order", loadOrderRoutes)
+	router.Route("/user", loadUserRoutes)
+
+	return router
+}
+
 func loadUserRoutes(router chi.Router) {
 	userHandler := &handler.User{}
 
@@ -29,13 +41,4 @@ func loadOrderRoutes(router chi.Router) {
 	router.Delete("/{id}", orderHandler.DeleteOrderById)
 }
 
-func loadRouter() *chi.Mux {
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
 
-	//Root routes for sub-route
-	router.Route("/order", loadOrderRoutes)
-	router.Route("/user", loadUserRoutes)
-
-	return router
-}
